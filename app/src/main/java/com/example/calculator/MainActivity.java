@@ -1,5 +1,7 @@
 package com.example.calculator;
 
+import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.TextureView;
@@ -9,8 +11,9 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    final static String TEXT_VIEW_KEY = "TEXTVIEW_TEXT";
     private TextView textView;
-    private String textExpression = new String();
+    private String textExpression;
     private Button mAddictionButton;
     private Button mSubtractButton;
     private Button mMultiplyButton;
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textView = findViewById(R.id.text_view);
+        textExpression = textView.getText().toString();
         mAddictionButton = findViewById(R.id.add);
         mSubtractButton = findViewById(R.id.subtract);
         mMultiplyButton = findViewById(R.id.multiply);
@@ -60,7 +64,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         /// Просто задание листнера созданого ранее
         mSubtractButton.setOnClickListener(subListener);
         mEqualButton.setOnClickListener(new ListenerEqual());
+    }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(TEXT_VIEW_KEY,textExpression);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        textExpression = savedInstanceState.getString(TEXT_VIEW_KEY);
+        textView.setText(textExpression);
     }
 
     /// Создание листнера для того чтобы задать его позже
